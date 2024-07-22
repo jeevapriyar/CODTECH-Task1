@@ -11,7 +11,7 @@
 # Overview of the Project
 
 ## Project Name: PASSWORD STRENGTH CHECKER
-![image](https://github.com/user-attachments/assets/38d7060b-5d7e-47cc-8d00-0d7c05651dad)
+![image](https://github.com/user-attachments/assets/559245f6-9222-4eea-8b85-ffd516e099b0)
 
 
 ## Objective
