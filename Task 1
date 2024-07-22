@@ -1,0 +1,90 @@
+/*  Here’s a basic example of how you might implement a password strength checker in Python  */
+/* This script defines a function ' PasswordStrengthChecker' that evaluates the strength of a password based on
+length, character types, and special characters. The passwords list contains sample passwords, and 
+the script prints out whether each password is strong or not.*/
+import re
+
+class PasswordStrengthChecker:
+    def __init__(self, password, wordlist_path):
+        self.password = password
+        self.wordlist_path = wordlist_path
+        self.length_criteria = False
+        self.lower_criteria = False
+        self.upper_criteria = False
+        self.digit_criteria = False
+        self.special_criteria = False
+        self.common_criteria = False
+        self.repeated_criteria = False
+        self.wordlist_criteria = False
+        self.key_sequences = ["1234", "abcd", "qwerty", "password", "letmein"]
+
+    def check_length(self):
+        self.length_criteria = len(self.password) >= 12
+
+    def check_lower(self):
+        self.lower_criteria = re.search(r'[a-z]', self.password) is not None
+
+    def check_upper(self):
+        self.upper_criteria = re.search(r'[A-Z]', self.password) is not None
+
+    def check_digit(self):
+        self.digit_criteria = re.search(r'\d', self.password) is not None
+
+    def check_special(self):
+        self.special_criteria = re.search(r'[!@#$%^&*(),.?":{}|<>]', self.password) is not None
+
+    def check_common_patterns(self):
+        self.common_criteria = not any(pattern in self.password.lower() for pattern in self.key_sequences)
+
+    def check_repeated_characters(self):
+        self.repeated_criteria = not re.search(r'(.)\1{2,}', self.password)
+
+    def check_wordlist(self):
+        with open(self.wordlist_path, 'r', encoding='utf-8') as file:
+            common_passwords = file.read().splitlines()
+        self.wordlist_criteria = self.password.lower() not in common_passwords
+
+    def evaluate_strength(self):
+        self.check_length()
+        self.check_lower()
+        self.check_upper()
+        self.check_digit()
+        self.check_special()
+        self.check_common_patterns()
+        self.check_repeated_characters()
+        self.check_wordlist()
+
+        checks = [
+            self.length_criteria,
+            self.lower_criteria,
+            self.upper_criteria,
+            self.digit_criteria,
+            self.special_criteria,
+            self.common_criteria,
+            self.repeated_criteria,
+            self.wordlist_criteria
+        ]
+
+        if all(checks):
+            return "Very Strong"
+        elif sum(checks) >= 6:
+            return "Strong"
+        elif sum(checks) >= 4:
+            return "Moderate"
+        else:
+            return "Weak"
+
+# Main loop to check passwords
+wordlist_path = "top_10000_passwords.txt"
+
+while True:
+    password = input("Enter a password to check its strength: ")
+    checker = PasswordStrengthChecker(password, wordlist_path)
+    strength = checker.evaluate_strength()
+    print(f"The password strength is: {strength}")
+    
+    # Ask user if they want to continue or terminate
+    user_choice = input("Do you want to check another password? (yes/no): ").strip().lower()
+    if user_choice == 'No'or user_choice == "N" or user_choice == "n" or user_choice == "no" :
+        print("Terminating the program. Goodbye!")
+        break
